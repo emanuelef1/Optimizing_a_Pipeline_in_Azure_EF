@@ -14,7 +14,7 @@ The dataset is composed by 21 columns split into bank data client and other attr
 We'll use HyperDrive to tune the hyperdrive parameters for the algorithm and compare to AutoML.
 
 **In 1-2 sentences, explain the solution: e.g. "The best performing model was a ..."**
-The best model was the Voting Ensemble.
+The best model was the **VotingEnsemble** with an accuracy of **0.91557**.
 
 ## Scikit-learn Pipeline
 **Explain the pipeline architecture, including data, hyperparameter tuning, and classification algorithm.**
@@ -51,12 +51,11 @@ AutoML runs more iterations to find the best performing model, which was VotingE
 **Compare the two models and their performance. What are the differences in accuracy? 
 In architecture? If there was a difference, why do you think there was one?**
 
-WIth the above configuration AutoML took a bit longer to run, but found the best model wich an accuracy of **0.91557**, while accuracy for Hyperdrive model was 0.910336
-
+WIth the above configuration AutoML took a bit longer to run, but found the best model wich an accuracy of **0.91557**, while accuracy for Hyperdrive model was **0.910336**
+AutoML was much easier to configure with less code to write and yet resulted to be more powerful, with AutoML is also very easy try out different algorithms compared to the single one in hyperdrive.
 
 ## Future work
 **What are some areas of improvement for future experiments? Why might these improvements help the model?**
 
 ## Proof of cluster clean up
-**If you did not delete your compute cluster in the code, please complete this section. Otherwise, delete this section.**
-**Image of cluster marked for deletion**
+Cluster has been deleted in the notebook.
