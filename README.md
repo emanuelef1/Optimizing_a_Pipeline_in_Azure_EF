@@ -31,15 +31,17 @@ The algorithm in the train.py is LogisticRegression and the metric is Accuracy (
 
 **What are the benefits of the parameter sampler you chose?**
 The sampler chosen is the RandomParameterSampling where hyperparameter values are randomly selected from the defined search space. 
+
 Values chosen are:
-C: uniform(0.05, 1)
-max_iter: choice(20,40,60,80,100,1000)
+* C: uniform(0.05, 1)
+* max_iter: choice(20,40,60,80,100,1000)
 
 **What are the benefits of the early stopping policy you chose?**
 BanditPolicy has been chosen. The policy terminates any runs that doesn't satisfy the specific slack factor of the best performing run.
+
 Parameters chosen are:
-slack_factor = 0.1
-evaluation_interval=1
+* slack_factor = 0.1
+* evaluation_interval=1
 
 It will evaluate every run and will stop a run if the best metric is less then 91% of the best performing.
 ![alt text](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure/blob/master/hyperdrive.png)
