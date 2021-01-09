@@ -55,7 +55,7 @@ WIth the above configuration AutoML took a bit longer to run, but found the best
 AutoML was much easier to configure with less code to write and yet resulted to be more powerful, with AutoML is also very easy try out different algorithms compared to the single one in hyperdrive.
 
 ## Future work
-**What are some areas of improvement for future experiments? Why might these improvements help the model?**
+I would like to make more run to improve the hyperdrive model and try other algorithms for hyperdrive.
 
 ## Proof of cluster clean up
 Cluster has been deleted in the notebook.
