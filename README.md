@@ -47,6 +47,7 @@ It will evaluate every run and will stop a run if the best metric is less then 9
 AutoML pipeline is fed by the same dataset, then data is cleaned imoprting the clean_data method from train.py.
 Then 'classification' is used as task and 'accuracy' as metric. 
 AutoML runs more iterations to find the best performing model, which was VotingEnsemble.
+![alt text](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure/blob/master/autoML.png)
 
 ## Pipeline comparison
 **Compare the two models and their performance. What are the differences in accuracy? 
