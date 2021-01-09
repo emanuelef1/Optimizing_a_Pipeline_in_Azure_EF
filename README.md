@@ -14,10 +14,12 @@ The dataset is composed by 21 columns split into bank data client and other attr
 We'll use HyperDrive to tune the hyperdrive parameters for the algorithm and compare to AutoML.
 
 **In 1-2 sentences, explain the solution: e.g. "The best performing model was a ..."**
+
 The best model was the **VotingEnsemble** with an accuracy of **0.91557**.
 
 ## Scikit-learn Pipeline
 **Explain the pipeline architecture, including data, hyperparameter tuning, and classification algorithm.**
+
 Firstly we start a compute cluster to run our exepriments.
 We define a sampler, a policy and and estimator. 
 Then we run the experiment submissing the hyper drive configuration. 
