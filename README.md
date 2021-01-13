@@ -6,30 +6,49 @@ In this project, we build and optimize an Azure ML pipeline using the Python SDK
 This model is then compared to an Azure AutoML run.
 
 ## Summary
-The dataset is based on the UCI bank marketing data set and the goal is to predict whether a user will subscribe a term deposit.
+In this project we want to compare HyperDrive and AutoML. The goal is to use HyperDrive to find the best hypeparameter for our trainig model and then compare it with AutoML and the model found by AutoML. 
 
-The dataset is composed by 21 columns split into bank data client and other attributes.
+The project is based on the UCI bank marketing data dataset and the goal is to predict whether a user will subscribe a term deposit.
 
-We'll use HyperDrive to tune the hyperdrive parameters for the algorithm and compare to AutoML.
+The dataset is composed by 21 columns split into bank data client:
+
+1 - age (numeric)
+2 - job : type of job (categorical: 'admin.','blue-collar','entrepreneur','housemaid','management','retired','self-employed','services','student','technician','unemployed','unknown')
+3 - marital : marital status (categorical: 'divorced','married','single','unknown'; note: 'divorced' means divorced or widowed)
+4 - education (categorical: 'basic.4y','basic.6y','basic.9y','high.school','illiterate','professional.course','university.degree','unknown')
+5 - default: has credit in default? (categorical: 'no','yes','unknown')
+6 - housing: has housing loan? (categorical: 'no','yes','unknown')
+7 - loan: has personal loan? (categorical: 'no','yes','unknown')
+
+and other attributes:
+8 - contact: contact communication type (categorical: 'cellular','telephone')
+9 - month: last contact month of year (categorical: 'jan', 'feb', 'mar', ..., 'nov', 'dec')
+10 - day_of_week: last contact day of the week (categorical: 'mon','tue','wed','thu','fri')
+11 - durationand other attributes
 
 **In 1-2 sentences, explain the solution: e.g. "The best performing model was a ..."**
-
-The best model was the **VotingEnsemble** with an accuracy of **0.91557**.
+The best model was the **VotingEnsemble** found by AutoML with an accuracy of **0.91557**.
 
 ## Scikit-learn Pipeline
 **Explain the pipeline architecture, including data, hyperparameter tuning, and classification algorithm.**
 
-Firstly we start a compute cluster to run our exepriments.
-We define a sampler, a policy and and estimator. 
-Then we run the experiment submissing the hyper drive configuration. 
+As mentioned we have two approach: hyperparameter tuning and AutoML.
 
-The training script is 'train.py': in the script data is downloaded, cleaned and split.
-The provided script has been modified to work correctly. In details the declaration of method clean_data has been moved at the beginning of the file and return x and y has been added. 
+## Hyperparameter tuning
+In this part of the architecture we want to optimize our model using HyperDrive. HyperDrive is a tool in Azure ML that helps in tuning hyperparameters.
+The algorithm in the train.py is sklearn _LogisticRegression_ and the hyperparameters to optimize are C and max-iter of _LogisticRegression_
 
-The algorithm in the train.py is LogisticRegression and the metric is Accuracy (with capital A).
+The architecture is composed by a train script and a notebook.
+In the _train.py_ script the CSV file data is loaded into a Azure tabular Dataset from a URL, then data is cleaned and split into train and test sets.
+
+
+In the notebook a HyperDriveConfig is created passing a parameter sampler, a early termination policy and an estimator. 
+In the configuration is also defined the metric to optimize, in this case we want to _maximize_ the _Accuracy_, and the number of run, which has been set to 20. 
+
+Then the hypedrive run is submitted: what is does is run 20 (in our case) experiments with value randomly chosen by the Sampler. 
 
 **What are the benefits of the parameter sampler you chose?**
-The sampler chosen is the RandomParameterSampling where hyperparameter values are randomly selected from the defined search space. 
+The sampler chosen is the RandomParameterSampling where hyperparameter values are randomly selected from the defined search space. RandomParameterSampling is the first choice 
 
 Values chosen are:
 * C: uniform(0.05, 1)
