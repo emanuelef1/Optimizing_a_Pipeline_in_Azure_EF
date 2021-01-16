@@ -10,7 +10,7 @@ In this project we want to compare HyperDrive and AutoML. The goal is to use Hyp
 
 The project is based on the UCI bank marketing data dataset and the _classification_ goal is to predict whether a user will subscribe a term deposit.
 
-The dataset is composed by 21 columns split into bank data client:
+The dataset is composed of 21 columns split into bank data client:
 
 * 1 - age (numeric)
 * 2 - job : type of job (categorical: 'admin.','blue-collar','entrepreneur','housemaid','management','retired','self-employed','services','student','technician','unemployed','unknown')
@@ -24,7 +24,7 @@ and other attributes:
 * 8 - contact: contact communication type (categorical: 'cellular','telephone')
 * 9 - month: last contact month of year (categorical: 'jan', 'feb', 'mar', ..., 'nov', 'dec')
 * 10 - day_of_week: last contact day of the week (categorical: 'mon','tue','wed','thu','fri')
-* 11 - duration
+* 11 - duration: last contact duration, in seconds (numeric). Important note: this attribute highly affects the output target (e.g., if duration=0 then y='no'). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.
 
 other attributes:
 * 12 - campaign: number of contacts performed during this campaign and for this client (numeric, includes last contact)
@@ -39,20 +39,20 @@ social and economic context attributes
 * 19 - euribor3m: euribor 3 month rate - daily indicator (numeric)
 * 20 - nr.employed: number of employees - quarterly indicator (numeric)
 
-**In 1-2 sentences, explain the solution: e.g. "The best performing model was a ..."**
-The best model was the **VotingEnsemble** found by AutoML with an accuracy of **0.91593**.
+
+The best model was the **VotingEnsemble** found by AutoML with an accuracy of **0.91612**.
 
 ## Scikit-learn Pipeline
-**Explain the pipeline architecture, including data, hyperparameter tuning, and classification algorithm.**
-
 As mentioned we have two approach: hyperparameter tuning and AutoML.
 
-## Hyperparameter tuning
-In this part of the architecture we want to optimize our model using HyperDrive. HyperDrive is a tool in Azure ML that helps tuning hyperparameters.
-The algorithm in the train.py is sklearn _LogisticRegression_ and the hyperparameters to optimize are 
-* *C*: Inverse of regularization strength; must be a positive float. Like in support vector machines, smaller values specify stronger regularization.
+#### Hyperparameter tuning
+In this part of the project we want to optimize our model using HyperDrive. 
+HyperDrive is a tool in Azure ML that helps tuning hyperparameters.
+The algorithm in the train.py is sklearn _LogisticRegression_ and the
+ hyperparameters to optimize are 
+* *C*: Inverse of regularization strength; must be a positive float.
+ Like in support vector machines, smaller values specify stronger regularization.
 * *max-iter*: Maximum number of iterations taken for the solvers to converge.
-
 
 The architecture is composed by a train script and a notebook.
 In the _train.py_ script the CSV file data is loaded into a Azure tabular Dataset from a URL, then data is cleaned and split into train and test sets.
@@ -63,17 +63,17 @@ In the configuration is also defined the metric to optimize, in this case we wan
 Then the hypedrive run is submitted: what is does is run 20 (in our case) experiments with value randomly chosen by the Sampler. 
 
 **What are the benefits of the parameter sampler you chose?**
+
 The sampler chosen is the RandomParameterSampling where hyperparameter values are randomly selected from the defined search space. RandomParameterSampling is the first choice for an initial search before to refine the search space to improve results.
 Both Grid sampling, which exhaustively search over the search space, and Bayesian sampling require enough budget. 
 The Random sampling has been chosen has first method and also because of the VM timeout. 
 
-C_param_range = [0.001,0.01,0.1,1,10,100]
-
 Values chosen are:
-* C: uniform(0.05, 1): this range has been chosen has C must be a positive number and 
+* C: choice(0.001, 0.01, 0.1, 0.5, 1,  10, 100): this range has been chosen as C must be a positive number with default value = 1 
 * max_iter: choice(20,40,60,80,100,1000)
 
 **What are the benefits of the early stopping policy you chose?**
+
 We use an early termination policy to ensure that poorly performing runs are stopped and so we can concentrate on good runs. 
 The *BanditPolicy* has been chosen. The policy terminates any runs that doesn't satisfy the specific slack factor of the best performing run.
 *Median stopping* is a policy based on running averages of primary metrics and stops all runs with primary metric values worse than the median of averages, while *Truncation selection* cancels a percentage (that must be set) of lowest performing runs at each evaluation interval.
@@ -85,26 +85,43 @@ Parameters chosen are:
 ![alt text](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure/blob/master/hyperdrive.png)
 
 ## AutoML
-**In 1-2 sentences, describe the model and hyperparameters generated by AutoML.**
-The second part of the project is to use AutoML to find a model. 
-In the notebook we load the same CSV file using _TabularDatasetFactory _. 
-Then data is cleaned importing the _clean_data method_ from train.py.
+The second part of the project is to use AutoML to find a model that will be compared with previous. 
+In the notebook we load the same CSV file using _TabularDatasetFactory_. 
+Then data is cleaned with the _clean_data_ method imported from train.py.
 The AutoMLConfig is configured using: 
 * 'classification' as task 
 * 'accuracy' as metric
 
-AutoML runs more iterations to find the best performing model, which was VotingEnsemble.
-![alt text](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure/blob/master/autoML.png)
+AutoML runs more iterations to find the best performing model, which was **VotingEnsemble**.
+![Top 9 features](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure_EF/blob/master/images/all_models.png)
 
 ## Pipeline comparison
-**Compare the two models and their performance. What are the differences in accuracy? 
-In architecture? If there was a difference, why do you think there was one?**
+With the above configuration AutoML took a bit longer to run, but found the best model with an accuracy of **0.91612**,
+ while accuracy for HyperDrive model was **0.91098**
+ 
+AutoML found the best model that was an _ensemble_ model. The second best in the list was also 
+an ensemble model, which shows us ensemble models perform better.
+The Voting Ensemble combines predictions from multiple models and can find better performance
+compared to single models.
+Even though I wasn't able to discover what models have been used in the model.
 
-WIth the above configuration AutoML took a bit longer to run, but found the best model wich an accuracy of **0.91557**, while accuracy for Hyperdrive model was **0.910336**
-AutoML was much easier to configure with less code to write and yet resulted to be more powerful, with AutoML is also very easy try out different algorithms compared to the single one in hyperdrive.
+AutoML was much easier to configure with less code to write and yet resulted to be more powerful, with AutoML 
+is also very easy try out different algorithms compared to the single for the default approach.
+
+Having a look at the top features for the model makes sense to me that duration, which shows the last contact duration, is the top feature as described above: if the duration is 0 so y = NO, and after the end of the call y is obviously known.
+![Top 9 features](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure_EF/blob/master/images/top_9_features.png)
 
 ## Future work
-I would like to make more run to improve the hyperdrive model and try other algorithms for hyperdrive.
+I would like to make more runs to improve the hyperparameters and maybe try other algorithms for HyperDrive other than
+LogisticRegression.
+In particular I'd like to try out the Grid or Bayesan sampler starting form the results 
+got from the results got with the Random sampler which should be 
+our starting point. 
+that sampling strategy will found a better accuracy. 
+I'd also try to modify data removing the 'duration' column and using the duration as benchmark, as suggestend in the dataset description.
+
+About AutoMl there not much to do, I guess. Doing more runs I've got different results (the latter the best actually) 
+and maybe longer run would help finding better models.   
 
 ## Proof of cluster clean up
 Cluster has been deleted in the notebook.
