@@ -82,8 +82,6 @@ Parameters chosen are:
 * slack_factor = 0.1 -> It will evaluate every run and will stop a run if the best metric is less then 91% of the best performing
 * evaluation_interval=1 -> will apply the policy every time the training script reports the primary metric
 
-![alt text](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure/blob/master/hyperdrive.png)
-
 ## AutoML
 The second part of the project is to use AutoML to find a model that will be compared with previous. 
 In the notebook we load the same CSV file using _TabularDatasetFactory_. 
