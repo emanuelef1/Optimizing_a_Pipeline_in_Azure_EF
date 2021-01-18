@@ -90,7 +90,24 @@ The AutoMLConfig is configured using:
 * 'classification' as task 
 * 'accuracy' as metric
 
-AutoML runs more iterations to find the best performing model, which was **VotingEnsemble**.
+AutoML creates a number of pipelines in parallel that try different algorithms and parameters for you. The service iterates through ML algorithms paired with feature selections, where each iteration produces a model with a training score.
+Ensemble models are supported and enabled by default in AutML. Ensemble learning improves machine learning results and predictive performance by combining multiple models as opposed to using single models. 
+The model was in fact an ensebmle model: **VotingEnsemble**. 
+Ensemble models supported in AutoML are *voting* and *stacking*.
+Voting: predicts based on the weighted average of predicted class probabilities (for classification tasks) or predicted regression targets (for regression tasks).
+
+From the json file describing the fitted model I can see that algorythms in the model are: XGBoostClassifier, XGBoostClassifier, XGBoostClassifier, LightGBM, XGBoostClassifier, XGBoostClassifier, RandomForest.
+From the same json file I could find the following hyperparameters associated:
+* min_samples_split=0.2442105263157895
+* min_weight_fraction_leaf=0.0
+* n_estimators=10
+* n_jobs=1
+* oob_score=False
+* random_state=None
+* verbose=0
+* warm_start=False
+
+
 ![Top 9 features](https://github.com/emanuelef1/Optimizing_a_Pipeline_in_Azure_EF/blob/master/images/all_models.png)
 
 ## Pipeline comparison
